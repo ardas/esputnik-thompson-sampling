@@ -100,18 +100,15 @@ public class BatchedThompsonSampling implements BatchedBandit {
     return RANDOM_ENGINE;
   }
 
-  @VisibleForTesting
-  int getNumberOfDraws() {
+  protected int getNumberOfDraws() {
     return NUMBER_OF_DRAWS;
   }
 
-  @VisibleForTesting
-  double getConfidenceLevel() {
+  protected double getConfidenceLevel() {
     return CONFIDENCE_LEVEL;
   }
 
-  @VisibleForTesting
-  double getExperimentValueQuitLevel() {
+  protected double getExperimentValueQuitLevel() {
     return EXPERIMENT_VALUE_QUIT_LEVEL;
   }
 
