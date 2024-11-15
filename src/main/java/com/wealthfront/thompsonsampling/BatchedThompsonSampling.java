@@ -1,19 +1,14 @@
 package com.wealthfront.thompsonsampling;
 
-import static java.util.stream.Collectors.toList;
-
 import cern.jet.random.Beta;
 import cern.jet.random.engine.MersenneTwister;
 import cern.jet.random.engine.RandomEngine;
-
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 public class BatchedThompsonSampling implements BatchedBandit {
 
@@ -96,8 +91,8 @@ public class BatchedThompsonSampling implements BatchedBandit {
   }
 
   @VisibleForTesting
-  RandomEngine getRandomEngine() {
-    return RANDOM_ENGINE;
+  public RandomEngine getRandomEngine() {
+    return new MersenneTwister(new Date());
   }
 
   protected int getNumberOfDraws() {
