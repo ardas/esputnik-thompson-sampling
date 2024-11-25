@@ -82,7 +82,7 @@ public class BatchedThompsonSampling implements BatchedBandit {
   }
 
   @VisibleForTesting
-  List<Beta> getProbabilityDensityFunctions(List<ObservedArmPerformance> performances) {
+  protected List<Beta> getProbabilityDensityFunctions(List<ObservedArmPerformance> performances) {
     return performances.stream().map(armPerformance -> {
       double alpha = armPerformance.getSuccesses() + 1;
       double beta = armPerformance.getFailures() + 1;
