@@ -28,7 +28,7 @@ public class BanditPerformance {
   public double getBestArmPerformance() {
     return performances.stream()
         .max(Comparator.comparing(ObservedArmPerformance::getExpectedConversionRate))
-        .orElse(new ObservedArmPerformance("", 0, 0))
+        .orElse(new ObservedArmPerformance(0, 0, 0))
         .getExpectedConversionRate();
   }
 

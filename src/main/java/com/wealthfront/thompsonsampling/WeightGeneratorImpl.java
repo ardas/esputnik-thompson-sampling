@@ -17,9 +17,9 @@ public class WeightGeneratorImpl implements WeightGenerator {
   public WeightUpdate getWeightUpdate(List<ObservedArmPerformance> performances) {
     BanditPerformance performance = new BanditPerformance(performances);
     BanditStatistics statistics = bandit.getBanditStatistics(performance);
-    Map<String, Double> weightsByVariant = statistics.getWeightsByVariant();
-    Map<String, ObservedArmPerformance> performancesByVariant = performances.stream()
-        .collect(toMap(ObservedArmPerformance::getVariantName, Function.identity()));
+    Map<Integer, Double> weightsByVariant = statistics.getWeightsByVariant();
+    Map<Integer, ObservedArmPerformance> performancesByVariant = performances.stream()
+        .collect(toMap(ObservedArmPerformance::getVariantId, Function.identity()));
     return new WeightUpdate(weightsByVariant, statistics.getVictoriousVariant(), performancesByVariant);
   }
 

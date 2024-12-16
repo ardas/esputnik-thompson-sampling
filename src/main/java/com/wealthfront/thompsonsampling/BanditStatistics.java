@@ -5,21 +5,21 @@ import java.util.Optional;
 
 public class BanditStatistics {
 
-  private final Map<String, Double> weightsByVariant;
-  private final Optional<String> victoriousVariant;
+  private final Map<Integer, Double> weightsByVariant;
+  private final Optional<Integer> victoriousVariant;
 
   public BanditStatistics(
-      Map<String, Double> armWeightsByVariant,
-      Optional<String> victoriousVariant) {
+      Map<Integer, Double> armWeightsByVariant,
+      Optional<Integer> victoriousVariant) {
     this.weightsByVariant = armWeightsByVariant;
     this.victoriousVariant = victoriousVariant;
   }
 
-  public Map<String, Double> getWeightsByVariant() {
+  public Map<Integer, Double> getWeightsByVariant() {
     return weightsByVariant;
   }
 
-  public Optional<String> getVictoriousVariant() {
+  public Optional<Integer> getVictoriousVariant() {
     return victoriousVariant;
   }
 

@@ -18,48 +18,49 @@ public class BatchedThompsonSamplingTest {
   @Test
   public void getBanditStatistics() {
     List<ObservedArmPerformance> armPerformances = ImmutableList.of(
-        new ObservedArmPerformance("a", 100, 100),
-        new ObservedArmPerformance("b", 99, 101));
+        new ObservedArmPerformance(1, 100, 100),
+        new ObservedArmPerformance(2, 99, 101)
+    );
 
     BanditPerformance banditPerformance = new BanditPerformance(armPerformances);
     BanditStatistics banditStatistics = getBandit(new MersenneTwister(1), 10, 0.90, 0.01)
         .getBanditStatistics(banditPerformance);
-    assertEquals(ImmutableMap.of("a", 0.6, "b", 0.4), banditStatistics.getWeightsByVariant());
+    assertEquals(ImmutableMap.of(1, 0.6, 2, 0.4), banditStatistics.getWeightsByVariant());
     assertFalse(banditStatistics.getVictoriousVariant().isPresent());
   }
 
   @Test
   public void getBanditStatistics_withWinner_fromWeights() {
     List<ObservedArmPerformance> armPerformances = ImmutableList.of(
-        new ObservedArmPerformance("a", 130, 100),
-        new ObservedArmPerformance("b", 90, 120));
+        new ObservedArmPerformance(1, 130, 100),
+        new ObservedArmPerformance(2, 90, 120));
 
     BanditPerformance banditPerformance = new BanditPerformance(armPerformances);
     BanditStatistics banditStatistics = getBandit(new MersenneTwister(1), 5, 0.75, 0.01)
         .getBanditStatistics(banditPerformance);
-    assertEquals(ImmutableMap.of("a", 1.0, "b", 0.0), banditStatistics.getWeightsByVariant());
-    assertEquals("a", banditStatistics.getVictoriousVariant().get());
+    assertEquals(ImmutableMap.of(1, 1.0, 2, 0.0), banditStatistics.getWeightsByVariant());
+    assertEquals(1, banditStatistics.getVictoriousVariant().get().intValue());
   }
 
   @Test
   public void getBanditStatistics_withWinner_fromQuitValue() {
     List<ObservedArmPerformance> armPerformances = ImmutableList.of(
-        new ObservedArmPerformance("a", 10, 10),
-        new ObservedArmPerformance("b", 9, 11));
+        new ObservedArmPerformance(1, 10, 10),
+        new ObservedArmPerformance(2, 9, 11));
 
     BanditPerformance banditPerformance = new BanditPerformance(armPerformances);
     BanditStatistics banditStatistics = getBandit(new MersenneTwister(1), 5, 0.90, 2.0)
         .getBanditStatistics(banditPerformance);
-    assertEquals(ImmutableMap.of("a", 0.4, "b", 0.6), banditStatistics.getWeightsByVariant());
-    assertEquals("b", banditStatistics.getVictoriousVariant().get());
+    assertEquals(ImmutableMap.of(1, 0.4, 2, 0.6), banditStatistics.getWeightsByVariant());
+    assertEquals(2, banditStatistics.getVictoriousVariant().get().intValue());
   }
 
   @Test
   public void getProbabilityDensityFunctions() {
     List<ObservedArmPerformance> armPerformances = ImmutableList.of(
-        new ObservedArmPerformance("a", 10, 10),
-        new ObservedArmPerformance("b", 9, 11),
-        new ObservedArmPerformance("c", 8, 12));
+        new ObservedArmPerformance(1, 10, 10),
+        new ObservedArmPerformance(2, 9, 11),
+        new ObservedArmPerformance(3, 8, 12));
 
     assertEquals(3, getBandit().getProbabilityDensityFunctions(armPerformances).size());
   }
@@ -76,7 +77,7 @@ public class BatchedThompsonSamplingTest {
     return new BatchedThompsonSampling() {
       @Override
       public RandomEngine getRandomEngine() {
-        return randomEngine;
+        return new MersenneTwister(1);
       }
 
       @Override

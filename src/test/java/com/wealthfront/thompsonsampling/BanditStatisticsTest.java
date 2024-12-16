@@ -13,9 +13,9 @@ public class BanditStatisticsTest {
   @Test
   public void getters() {
     BanditStatistics banditStatistics = new BanditStatistics(
-        ImmutableMap.of("a", 0.8, "b", 0.2), Optional.of("a"));
-    assertEquals(ImmutableMap.of("a", 0.8, "b", 0.2), banditStatistics.getWeightsByVariant());
-    assertEquals("a", banditStatistics.getVictoriousVariant().get());
+        ImmutableMap.of(1, 0.8, 2, 0.2), Optional.of(1));
+    assertEquals(ImmutableMap.of(1, 0.8, 2, 0.2), banditStatistics.getWeightsByVariant());
+    assertEquals(1, banditStatistics.getVictoriousVariant().get().intValue());
   }
 
 }

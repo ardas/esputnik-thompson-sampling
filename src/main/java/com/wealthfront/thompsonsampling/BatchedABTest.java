@@ -25,7 +25,7 @@ public class BatchedABTest implements BatchedBandit {
   @Override
   public BanditStatistics getBanditStatistics(BanditPerformance banditPerformance) {
     List<ObservedArmPerformance> performances = banditPerformance.getPerformances();
-    Map<String, Double> equalWeightsByVariant = getEqualWeightsByVariant(performances);
+    Map<Integer, Double> equalWeightsByVariant = getEqualWeightsByVariant(performances);
     if (REQUIRES_MIN_SAMPLES) {
       boolean isBelowMinimumSamples = performances.stream()
           .anyMatch(performance -> performance.getTotal() < getMinimumNumberOfSamples());
@@ -50,7 +50,7 @@ public class BatchedABTest implements BatchedBandit {
     }
 
     boolean includeVictoriousVariant = chiSquare(1.0, chiSquared) >= CONFIDENCE_LEVEL || REQUIRES_MIN_SAMPLES;
-    Optional<String> maybeVictoriousVariant = includeVictoriousVariant
+    Optional<Integer> maybeVictoriousVariant = includeVictoriousVariant
         ? Optional.of(measuredPerformance.bestVariant)
         : Optional.empty();
     return new BanditStatistics(equalWeightsByVariant, maybeVictoriousVariant);
@@ -75,10 +75,10 @@ public class BatchedABTest implements BatchedBandit {
     return x * x;
   }
 
-  private Map<String, Double> getEqualWeightsByVariant(List<ObservedArmPerformance> performances) {
+  private Map<Integer, Double> getEqualWeightsByVariant(List<ObservedArmPerformance> performances) {
     double equalWeight = 1.0 / performances.size();
     return performances.stream()
-        .collect(toMap(ObservedArmPerformance::getVariantName, x -> equalWeight));
+        .collect(toMap(ObservedArmPerformance::getVariantId, x -> equalWeight));
   }
 
   private MeasuredPerformance getMeasuredPerformance(List<ObservedArmPerformance> performances) {
@@ -89,7 +89,7 @@ public class BatchedABTest implements BatchedBandit {
       double conversion = performance.getSuccesses() * 1.0 / (performance.getFailures() + performance.getSuccesses());
       if (conversion > measuredPerformance.bestConversion) {
         measuredPerformance.bestConversion = conversion;
-        measuredPerformance.bestVariant = performance.getVariantName();
+        measuredPerformance.bestVariant = performance.getVariantId();
       }
     });
     return measuredPerformance;
@@ -102,7 +102,7 @@ public class BatchedABTest implements BatchedBandit {
 
   private static class MeasuredPerformance {
 
-    String bestVariant;
+    Integer bestVariant;
     double bestConversion = -1.0;
     long totalSuccesses = 0;
     long totalFailures = 0;

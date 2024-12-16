@@ -13,14 +13,14 @@ public class WeightUpdateTest {
 
   @Test
   public void getters() {
-    Map<String, Double> weightByVariantName = ImmutableMap.of("a", 0.4, "b", 0.6);
-    Map<String, ObservedArmPerformance> performanceByVariantName = ImmutableMap.of(
-        "a", new ObservedArmPerformance("a", 10L, 5L),
-        "b", new ObservedArmPerformance("b", 8L, 5L));
+    Map<Integer, Double> weightByVariantName = ImmutableMap.of(1, 0.4, 2, 0.6);
+    Map<Integer, ObservedArmPerformance> performanceByVariantName = ImmutableMap.of(
+        1, new ObservedArmPerformance(1, 10L, 5L),
+        2, new ObservedArmPerformance(2, 8L, 5L));
 
-    WeightUpdate weightUpdate = new WeightUpdate(weightByVariantName, Optional.of("a"), performanceByVariantName);
+    WeightUpdate weightUpdate = new WeightUpdate(weightByVariantName, Optional.of(1), performanceByVariantName);
     assertEquals(weightByVariantName, weightUpdate.getWeightByVariantName());
-    assertEquals("a", weightUpdate.getMaybeWinningVariant().get());
+    assertEquals(1, weightUpdate.getMaybeWinningVariant().get().intValue());
     assertEquals(performanceByVariantName, weightUpdate.getPerformancesByVariantName());
   }
 
