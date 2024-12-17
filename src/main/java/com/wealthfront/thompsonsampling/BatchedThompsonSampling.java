@@ -12,8 +12,6 @@ import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static java.util.stream.Collectors.toList;
-
 
 public class BatchedThompsonSampling implements BatchedBandit {
 
@@ -28,16 +26,12 @@ public class BatchedThompsonSampling implements BatchedBandit {
         int n = performances.size();
         double[][] table = new double[getNumberOfDraws()][n];
         int[] wins = new int[n];
-//    List<Beta> probabilityDensityFunctions = getProbabilityDensityFunctions(performances);
-
         fillProbabilities(performances, table);
 
         for (int i = 0; i < getNumberOfDraws(); i++) {
             double maxValue = -1.0;
             int winningArm = -1;
             for (int j = 0; j < n; j++) {
-//        Beta pdf = probabilityDensityFunctions.get(j);
-//        table[i][j] = pdf.nextDouble();
                 if (table[i][j] > maxValue) {
                     maxValue = table[i][j];
                     winningArm = j;
@@ -45,16 +39,6 @@ public class BatchedThompsonSampling implements BatchedBandit {
             }
             wins[winningArm] += 1;
         }
-
-
-        System.out.println("############################");
-        for (int j = 0; j < n; j++) {
-            for (int i = 0; i < getNumberOfDraws(); i++) {
-                System.out.print(table[i][j] + " ");
-            }
-            System.out.println();
-        }
-
 
 
         Map<Integer, Double> armWeightsByVariant = new HashMap<>();
@@ -110,16 +94,8 @@ public class BatchedThompsonSampling implements BatchedBandit {
         }
     }
 
-    @Deprecated
-    protected List<Beta> getProbabilityDensityFunctions(List<ObservedArmPerformance> performances) {
-        return performances.stream().map(armPerformance -> {
-            double alpha = armPerformance.getSuccesses() + 1;
-            double beta = armPerformance.getFailures() + 1;
-            return new Beta(alpha, beta, getRandomEngine());
-        }).collect(toList());
-    }
-
-    protected Beta getProbabilityDensityFunction(ObservedArmPerformance armPerformance, RandomEngine randomEngine) {
+    protected Beta getProbabilityDensityFunction(ObservedArmPerformance armPerformance,
+                                                 RandomEngine randomEngine) {
         double alpha = armPerformance.getSuccesses() + 1;
         double beta = armPerformance.getFailures() + 1;
         return new Beta(alpha, beta, randomEngine);

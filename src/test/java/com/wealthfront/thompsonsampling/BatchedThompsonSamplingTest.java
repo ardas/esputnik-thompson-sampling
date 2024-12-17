@@ -25,7 +25,7 @@ public class BatchedThompsonSamplingTest {
     BanditPerformance banditPerformance = new BanditPerformance(armPerformances);
     BanditStatistics banditStatistics = getBandit(new MersenneTwister(1), 10, 0.90, 0.01)
         .getBanditStatistics(banditPerformance);
-    assertEquals(ImmutableMap.of(1, 0.6, 2, 0.4), banditStatistics.getWeightsByVariant());
+    assertEquals(ImmutableMap.of(1, 0.7, 2, 0.3), banditStatistics.getWeightsByVariant());
     assertFalse(banditStatistics.getVictoriousVariant().isPresent());
   }
 
@@ -55,19 +55,7 @@ public class BatchedThompsonSamplingTest {
     assertEquals(2, banditStatistics.getVictoriousVariant().get().intValue());
   }
 
-  @Test
-  public void getProbabilityDensityFunctions() {
-    List<ObservedArmPerformance> armPerformances = ImmutableList.of(
-        new ObservedArmPerformance(1, 10, 10),
-        new ObservedArmPerformance(2, 9, 11),
-        new ObservedArmPerformance(3, 8, 12));
 
-    assertEquals(3, getBandit().getProbabilityDensityFunctions(armPerformances).size());
-  }
-
-  private BatchedThompsonSampling getBandit() {
-    return new BatchedThompsonSampling();
-  }
 
   private BatchedThompsonSampling getBandit(
       RandomEngine randomEngine,
@@ -77,7 +65,7 @@ public class BatchedThompsonSamplingTest {
     return new BatchedThompsonSampling() {
       @Override
       public RandomEngine getRandomEngine() {
-        return new MersenneTwister(1);
+        return randomEngine;
       }
 
       @Override

@@ -2,6 +2,7 @@ package com.wealthfront.thompsonsampling;
 
 import cern.jet.random.Beta;
 import cern.jet.random.engine.MersenneTwister;
+import cern.jet.random.engine.RandomEngine;
 import com.opencsv.CSVReader;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,8 +18,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static java.util.stream.Collectors.toList;
 
 
 @Ignore
@@ -57,13 +56,11 @@ public class BuildExamplesTest {
                             private double prior_scale = 50;
 
                             @Override
-                            protected List<Beta> getProbabilityDensityFunctions(List<ObservedArmPerformance> performances) {
-                                final MersenneTwister randomEngine = new MersenneTwister(new Date());
-                                return performances.stream().map(armPerformance -> {
-                                    double alpha = armPerformance.getSuccesses() + ctr_prior * prior_scale + +1;
-                                    double beta = armPerformance.getFailures() + (1 - ctr_prior) * prior_scale + 1;
-                                    return new Beta(alpha, beta, randomEngine);
-                                }).collect(toList());
+                            protected Beta getProbabilityDensityFunction(ObservedArmPerformance armPerformance,
+                                                                         RandomEngine randomEngine) {
+                                double alpha = armPerformance.getSuccesses() + ctr_prior * prior_scale + +1;
+                                double beta = armPerformance.getFailures() + (1 - ctr_prior) * prior_scale + 1;
+                                return new Beta(alpha, beta, randomEngine);
                             }
 
                             @Override

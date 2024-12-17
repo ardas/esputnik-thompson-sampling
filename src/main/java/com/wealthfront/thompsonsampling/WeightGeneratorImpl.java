@@ -1,12 +1,12 @@
 package com.wealthfront.thompsonsampling;
 
-import static java.util.stream.Collectors.toMap;
+import com.google.common.annotations.VisibleForTesting;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.google.common.annotations.VisibleForTesting;
+import static java.util.stream.Collectors.toMap;
 
 public class WeightGeneratorImpl implements WeightGenerator {
 
